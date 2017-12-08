@@ -109,11 +109,11 @@ class FaceModel extends GraphicDraw.Graphic {
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
 
         canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-        canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
+        canvas.drawText("Numer: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
+        canvas.drawText("Prawdopodobieństwo wystąpienia uśmiechu: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
 
         String prediction = getPrediction(face.getEulerY(),face.getEulerZ());
-        canvas.drawText("Prediction: "+prediction,x-ID_X_OFFSET,y-ID_Y_OFFSET+3*ID_TEXT_SIZE,mIdPaint);
+        canvas.drawText("Kierunek odchylenia twarzy: "+prediction,x-ID_X_OFFSET,y-ID_Y_OFFSET+3*ID_TEXT_SIZE,mIdPaint);
         // Draws a bounding box around the face.
         float xOffset = scaleX(face.getWidth() / 2.0f);
         float yOffset = scaleY(face.getHeight() / 2.0f);
@@ -123,7 +123,7 @@ class FaceModel extends GraphicDraw.Graphic {
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
 
-        TextView textView = (TextView)((Activity)mContext).findViewById(R.id.faceUpdates);
+        /*TextView textView = (TextView)((Activity)mContext).findViewById(R.id.faceUpdates);
         String data=textView.getText().toString();
         int len = data.length();
         String line =face.getId()+"  "+ getUpdates();
@@ -136,7 +136,7 @@ class FaceModel extends GraphicDraw.Graphic {
             }
         }else{
             textView.append("\nUserId:"+line);
-        }
+        }*/
 
         final ScrollView mScrollView=(ScrollView)((Activity)mContext).findViewById(R.id.scrollView);
 
@@ -153,39 +153,39 @@ class FaceModel extends GraphicDraw.Graphic {
         String feature="";
         if(eulerZ<5f && eulerZ >=0f){
             if(eulerY>0f && eulerY<60f){
-                feature="Facing straight right";
+                feature="Twarz skierowana przed siebie";
             }else{
-                feature="no tilt";
+                feature="Brak odchylenia";
             }
         }else if(eulerZ>5f && eulerZ<45f){
             if(eulerY>0f && eulerY<=60f){
-                feature="facing slightly right up";
+                feature="Twarz skierowana lekko w górę";
             }else {
-                feature="Face Slightly tilted to right";
+                feature="Twarz lekko przechylona w prawo";
             }
         }else if(eulerZ>45f){
             if(eulerY>60f && eulerY!=0){
-                feature="Facing right up";
+                feature="Twarz skierowana w górę";
             }else{
-                feature="Face tilted to right";
+                feature="Twarz przechylona w prawo";
             }
         }else if(eulerZ<0f && eulerZ >-5f){
             if(eulerY>-60f && eulerY!=0){
-                feature="Facing right";
+                feature="Twarz skierowana w prawo";
             }else{
-                feature="no tilt";
+                feature="Brak odchylenia";
             }
         }else if(eulerZ<-5f && eulerZ>-45f){
             if(eulerY>-60f && eulerY!=0){
-                feature="Facing Left up";
+                feature="Twarz skierowana w górę";
             }else{
-                feature="Face Slightly tilted to left";
+                feature="Twarz przechylona lekko w lewo";
             }
         }else{
             if(eulerY>-6f && eulerY!=0){
-                feature="Facing Left up";
+                feature="Twarz skierowana w górę";
             }else{
-                feature="Face tilted to left";
+                feature="Twarz przechylona w lewo";
             }
         }
 
@@ -206,7 +206,7 @@ class FaceModel extends GraphicDraw.Graphic {
             } else if (leftEyeClosed){
                 update = "Closed Eye Smile";
             } else {
-                update = "Smile";
+                update = "Uśmiech";
             }
         } else {
             if (leftEyeClosed && !rightEyeClosed) {

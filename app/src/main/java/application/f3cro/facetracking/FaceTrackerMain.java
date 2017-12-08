@@ -1,18 +1,4 @@
-/*
- * Copyright (C) The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package application.f3cro.facetracking;
 
 import android.Manifest;
@@ -46,7 +32,7 @@ import java.io.IOException;
  * overlay graphics to indicate the position, size, and ID of each face.
  */
 public final class FaceTrackerMain extends AppCompatActivity {
-    private static final String TAG = "FaceTracker";
+    private static final String TAG = "Detektor Twarzy";
 
     private CameraSource mCameraSource = null;
 
@@ -58,9 +44,6 @@ public final class FaceTrackerMain extends AppCompatActivity {
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    //==============================================================================================
-    // Activity Methods
-    //==============================================================================================
 
     /**
      * Initializes the UI and initiates the creation of a face detector.
@@ -72,7 +55,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
 
         mPreview = (CameraSourceView) findViewById(R.id.preview);
         mGraphicDraw = (GraphicDraw) findViewById(R.id.faceOverlay);
-        mUpdates = (TextView) findViewById(R.id.faceUpdates);
+        //mUpdates = (TextView) findViewById(R.id.faceUpdates);
 
 
 
@@ -136,10 +119,10 @@ public final class FaceTrackerMain extends AppCompatActivity {
 
         if (!detector.isOperational()) {
             new AlertDialog.Builder(this)
-                    .setMessage("Face detector dependencies are not yet available.")
+                    .setMessage("Detektor twarzy nie jest jeszcze gotowy.")
                     .show();
 
-            Log.w(TAG, "Face detector dependencies are not yet available.");
+            Log.w(TAG, "Detektor twarzy nie jest jeszcze gotowy.");
             return;
         }
 
@@ -201,20 +184,20 @@ public final class FaceTrackerMain extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
-            Log.d(TAG, "Got unexpected permission result: " + requestCode);
+            Log.d(TAG, "Przyznanie uprawień zwróciło nieoczekiwany wynik: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Camera permission granted - initialize the camera source");
+            Log.d(TAG, "Przyznano uprawnienia do kamery");
             // we have permission, so create the camerasource
             createCameraSource();
             return;
         }
 
-        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+        Log.e(TAG, "Nie przyznano uprawnień = " + grantResults.length +
+                " kod = " + (grantResults.length > 0 ? grantResults[0] : "(pusty)"));
 
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -223,15 +206,12 @@ public final class FaceTrackerMain extends AppCompatActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Face Tracker sample")
+        builder.setTitle("Detektor Twarzy")
                 .setMessage(R.string.no_camera_permission)
                 .setPositiveButton(R.string.ok, listener)
                 .show();
     }
 
-    //==============================================================================================
-    // Camera Source Preview
-    //==============================================================================================
 
     /**
      * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
@@ -253,16 +233,13 @@ public final class FaceTrackerMain extends AppCompatActivity {
             try {
                 mPreview.start(mCameraSource, mGraphicDraw);
             } catch (IOException e) {
-                Log.e(TAG, "Unable to start camera source.", e);
+                Log.e(TAG, "Nie udało się pobrać obrazu ze źródła.", e);
                 mCameraSource.release();
                 mCameraSource = null;
             }
         }
     }
 
-    //==============================================================================================
-    // Graphic Face Tracker
-    //==============================================================================================
 
     /**
      * Factory for creating a face tracker to be associated with a new face.  The multiprocessor

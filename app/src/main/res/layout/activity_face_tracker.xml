@@ -35,13 +35,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true">
 
-        <TextView
-            android:id="@+id/faceUpdates"
-            android:textColor="@android:color/holo_red_dark"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello" />
+
     </ScrollView>
 
 </RelativeLayout>
