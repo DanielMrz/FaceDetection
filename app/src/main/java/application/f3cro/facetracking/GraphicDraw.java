@@ -1,18 +1,3 @@
-/*
- * Copyright (C) The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package application.f3cro.facetracking;
 
 import android.content.Context;
@@ -26,22 +11,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A view which renders a series of custom graphics to be overlayed on top of an associated preview
- * (i.e., the camera preview).  The creator can add graphics objects, update the objects, and remove
- * them, triggering the appropriate drawing and invalidation within the view.<p>
+ * Widok, który renderuje serię niestandardowych grafik, które mają zostać nałożone na skojarzony podgląd
+ * (tj. podgląd kamery). Twórca może dodawać obiekty graficzne, aktualizować obiekty i usuwać
+ * je, uruchamiając odpowiedni rysunek i unieważnienie w widoku.
  *
- * Supports scaling and mirroring of the graphics relative the camera's preview properties.  The
- * idea is that detection items are expressed in terms of a preview size, but need to be scaled up
- * to the full view size, and also mirrored in the case of the front-facing camera.<p>
+ * Obsługuje skalowanie i dublowanie grafiki w odniesieniu do właściwości podglądu kamery. The
+ * Pomysł polega na tym, że elementy wykrywające są wyrażane w postaci rozmiaru podglądu, ale muszą być skalowane
+ * do pełnego rozmiaru widoku, a także do lustrzanego odbicia w przypadku kamery przedniej.
  *
- * Associated {@link Graphic} items should use the following methods to convert to view coordinates
- * for the graphics that are drawn:
- * <ol>
- * <li>{@link Graphic#scaleX(float)} and {@link Graphic#scaleY(float)} adjust the size of the
- * supplied value from the preview scale to the view scale.</li>
- * <li>{@link Graphic#translateX(float)} and {@link Graphic#translateY(float)} adjust the coordinate
- * from the preview's coordinate system to the view coordinate system.</li>
- * </ol>
+ * Powiązane elementy {@link Graphic} powinny używać następujących metod do konwersji, aby zobaczyć współrzędne
+ * dla rysowanych grafik:
+ *
+ * {@ link Graphic # scaleX (float)} i {@link Graphic # scaleY (float)} dostosowują rozmiar
+ * podana wartość ze skali podglądu do skali widoku.
+ * <li> {@ link Graphic # translateX (float)} i {@link Graphic # translateY (float)} dopasuj współrzędne
+ * z układu współrzędnych podglądu do układu współrzędnych widoku.
+ *
  */
 public class GraphicDraw extends View {
     private final Object mLock = new Object();
@@ -53,9 +38,9 @@ public class GraphicDraw extends View {
     private Set<Graphic> mGraphics = new HashSet<>();
 
     /**
-     * Base class for a custom graphics object to be rendered within the graphic overlay.  Subclass
-     * this and implement the {@link Graphic#draw(Canvas)} method to define the
-     * graphics element.  Add instances to the overlay using {@link GraphicDraw#add(Graphic)}.
+     * Klasa podstawowa dla niestandardowego obiektu graficznego, który ma być renderowany w nakładce graficznej. Podklasa
+     * zaimplementuje metodę {@link Graphic # draw (Canvas)}, aby zdefiniować
+     * element graficzny. Dodaj wystąpienia do nakładki za pomocą {@link GraphicDraw # add (Graphic)}.
      */
     public static abstract class Graphic {
         private GraphicDraw mOverlay;
@@ -65,37 +50,28 @@ public class GraphicDraw extends View {
         }
 
         /**
-         * Draw the graphic on the supplied canvas.  Drawing should use the following methods to
-         * convert to view coordinates for the graphics that are drawn:
-         * <ol>
-         * <li>{@link Graphic#scaleX(float)} and {@link Graphic#scaleY(float)} adjust the size of
-         * the supplied value from the preview scale to the view scale.</li>
-         * <li>{@link Graphic#translateX(float)} and {@link Graphic#translateY(float)} adjust the
-         * coordinate from the preview's coordinate system to the view coordinate system.</li>
-         * </ol>
-         *
-         * @param canvas drawing canvas
+         * Narysuj grafikę na dostarczonym obrazie.
          */
         public abstract void draw(Canvas canvas);
 
         /**
-         * Adjusts a horizontal value of the supplied value from the preview scale to the view
-         * scale.
+         * Dostosowuje poziomą wartość
          */
         public float scaleX(float horizontal) {
             return horizontal * mOverlay.mWidthScaleFactor;
         }
 
         /**
-         * Adjusts a vertical value of the supplied value from the preview scale to the view scale.
+         * Dostosowuje pionowa wartosc
          */
         public float scaleY(float vertical) {
             return vertical * mOverlay.mHeightScaleFactor;
         }
 
         /**
-         * Adjusts the x coordinate from the preview's coordinate system to the view coordinate
+         * Dostosowuje współrzędną x z układu współrzędnych podglądu do współrzędnych widoku
          * system.
+
          */
         public float translateX(float x) {
             if (mOverlay.mFacing == CameraSource.CAMERA_FACING_FRONT) {
@@ -106,7 +82,7 @@ public class GraphicDraw extends View {
         }
 
         /**
-         * Adjusts the y coordinate from the preview's coordinate system to the view coordinate
+         * Dostosowuje współrzędną y z układu współrzędnych podglądu do współrzędnych widoku
          * system.
          */
         public float translateY(float y) {
@@ -123,7 +99,7 @@ public class GraphicDraw extends View {
     }
 
     /**
-     * Removes all graphics from the overlay.
+     * Usuwa całą grafikę.
      */
     public void clear() {
         synchronized (mLock) {
@@ -133,7 +109,7 @@ public class GraphicDraw extends View {
     }
 
     /**
-     * Adds a graphic to the overlay.
+     * Dodaj grafikę.
      */
     public void add(Graphic graphic) {
         synchronized (mLock) {
@@ -143,7 +119,7 @@ public class GraphicDraw extends View {
     }
 
     /**
-     * Removes a graphic from the overlay.
+     * Usuń grafikę.
      */
     public void remove(Graphic graphic) {
         synchronized (mLock) {
@@ -156,8 +132,8 @@ public class GraphicDraw extends View {
 
 
     /**
-     * Sets the camera attributes for size and facing direction, which informs how to transform
-     * image coordinates later.
+     * Ustawia atrybuty kamery dla rozmiaru i kierunku przewijania, co informuje, jak przekształcić
+     * współrzędne obrazu...
      */
     public void setCameraInfo(int previewWidth, int previewHeight, int facing) {
         synchronized (mLock) {
@@ -169,7 +145,7 @@ public class GraphicDraw extends View {
     }
 
     /**
-     * Draws the overlay with its associated graphic objects.
+     * Rysuje nakładkę z powiązanymi z nią obiektami graficznymi.
      */
     @Override
     protected void onDraw(Canvas canvas) {

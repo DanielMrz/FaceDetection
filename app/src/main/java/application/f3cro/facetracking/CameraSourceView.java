@@ -1,7 +1,7 @@
-
 package application.f3cro.facetracking;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -71,6 +71,7 @@ public class CameraSourceView extends ViewGroup {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void startIfReady() throws IOException {
         if (mStartRequested && mSurfaceAvailable) {
 
@@ -81,8 +82,8 @@ public class CameraSourceView extends ViewGroup {
                 int min = Math.min(size.getWidth(), size.getHeight());
                 int max = Math.max(size.getWidth(), size.getHeight());
                 if (isPortraitMode()) {
-                    // Swap width and height sizes when in portrait, since it will be rotated by
-                    // 90 degrees
+                    // Zamień szerokość i wysokość w trybie portretowym, ponieważ zostanie on obrócony o
+                    // 90 stopni
                     mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
                 } else {
                     mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
@@ -126,7 +127,7 @@ public class CameraSourceView extends ViewGroup {
             }
         }
 
-        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
+        // Zamień szerokość i wysokość w pionie, ponieważ zostanie obrócony o 90 stopni
         if (isPortraitMode()) {
             int tmp = width;
             width = height;
@@ -136,11 +137,11 @@ public class CameraSourceView extends ViewGroup {
         final int layoutWidth = right - left;
         final int layoutHeight = bottom - top;
 
-        // Computes height and width for potentially doing fit width.
+        // Oblicza wysokość i szerokość, aby potencjalnie dopasować szerokość.
         int childWidth = layoutWidth;
         int childHeight = (int)(((float) layoutWidth / (float) width) * height);
 
-        // If height is too tall using fit width, does fit height instead.
+        // Jeśli wysokość jest zbyt wysoka przy użyciu dopasowanej szerokości,to dopasowuje wysokość.
         if (childHeight > layoutHeight) {
             childHeight = layoutHeight;
             childWidth = (int)(((float) layoutHeight / (float) height) * width);

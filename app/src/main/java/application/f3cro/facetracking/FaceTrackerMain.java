@@ -1,4 +1,3 @@
-
 package application.f3cro.facetracking;
 
 import android.Manifest;
@@ -28,8 +27,8 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.io.IOException;
 
 /**
- * Activity for the face tracker app.  This app detects faces with the rear facing camera, and draws
- * overlay graphics to indicate the position, size, and ID of each face.
+ * Główna aktywność aplikacji, która odpowiada za śledzenie twarzy. Ta aplikacja wykrywa twarze za pomocą tylnej kamery i rysuje
+ * nakładki graficzne wskazujące pozycję, rozmiar i identyfikator każdej twarzy.
  */
 public final class FaceTrackerMain extends AppCompatActivity {
     private static final String TAG = "Detektor Twarzy";
@@ -41,12 +40,12 @@ public final class FaceTrackerMain extends AppCompatActivity {
     private TextView mUpdates;
 
     private static final int RC_HANDLE_GMS = 9001;
-    // permission request codes need to be < 256
+    // kody żądań uprawnień muszą być < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
 
     /**
-     * Initializes the UI and initiates the creation of a face detector.
+     * Inicjuje interfejs użytkownika i inicjuje tworzenie detektora twarzy.
      */
     @Override
     public void onCreate(Bundle icicle) {
@@ -59,8 +58,9 @@ public final class FaceTrackerMain extends AppCompatActivity {
 
 
 
-        // Check for the camera permission before accessing the camera.  If the
-        // permission is not granted yet, request permission.
+
+        // Sprawdź uprawnienia kamery przed uzyskaniem dostępu do kamery. Jeśli
+        // uprawnienia nie zostały jeszcze przyznane, prośba o pozwolenie.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
@@ -70,9 +70,8 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
     /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
+     * Obsługuje żądanie zgody kamery.
+     * Pokazuje komunikat "Snackbar" tym, którzy nie zezwolili na dostęp, dlaczego potrzebne jest zezwolenie
      */
     private void requestCameraPermission() {
         Log.w(TAG, "Camera permission is not granted. Requesting permission");
@@ -102,9 +101,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
     /**
-     * Creates and starts the camera.  Note that this uses a higher resolution in comparison
-     * to other detection examples to enable the barcode detector to detect small barcodes
-     * at long distances.
+     * Tworzenie i uruchomienie kamery
      */
     private void createCameraSource() {
 
@@ -135,7 +132,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
     /**
-     * Restarts the camera.
+     * Restart kamery.
      */
     @Override
     protected void onResume() {
@@ -145,7 +142,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
     /**
-     * Stops the camera.
+     * Zatrzymanie kamery.
      */
     @Override
     protected void onPause() {
@@ -154,9 +151,8 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
     /**
-     * Releases the resources associated with the camera source, the associated detector, and the
-     * rest of the processing pipeline.
-     */
+     * Zwolnienie zasobów związanych ze źródłem kamery, powiązanego detektora i
+     * informacji przetwarzania    */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -166,20 +162,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
     /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
+     * Callback
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -214,9 +197,9 @@ public final class FaceTrackerMain extends AppCompatActivity {
 
 
     /**
-     * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
-     * (e.g., because onResume was called before the camera source was created), this will be called
-     * again when the camera source is created.
+     * Rozpoczyna lub uruchamia źródło kamery, jeśli istnieje. Jeśli źródło kamery jeszcze nie istnieje
+     * (np. ponieważ onResume został wywołany przed utworzeniem źródła kamery), zostanie to wywołane
+     * ponownie, gdy źródło kamery zostanie utworzone.
      */
     private void startCameraSource() {
 
@@ -241,9 +224,9 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
 
-    /**
-     * Factory for creating a face tracker to be associated with a new face.  The multiprocessor
-     * uses this factory to create face trackers as needed -- one for each individual.
+    /*
+     * Tworzenie modułu śledzenia twarzy, który zostanie powiązany z nową twarzą. Multiprocesor
+     * wykorzystuje tę "factory" do tworzenia modułów do śledzenia twarzy w razie potrzeby - po jednym dla każdej osoby.
      */
     private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
         @Override
@@ -253,8 +236,8 @@ public final class FaceTrackerMain extends AppCompatActivity {
     }
 
     /**
-     * Face tracker for each detected individual. This maintains a face graphic within the app's
-     * associated face overlay.
+     * Face tracker dla każdej wykrytej osoby. To utrzymuje grafikę twarzy w aplikacji
+     * powiązana nakładka na twarz.
      */
     private class GraphicFaceTracker extends Tracker<Face> {
         private GraphicDraw mOverlay;
@@ -266,7 +249,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
         }
 
         /**
-         * Start tracking the detected face instance within the face overlay.
+         * Rozpocznij śledzenie wykrytej instancji twarzy w nakładce na twarz.
          */
         @Override
         public void onNewItem(int faceId, Face item) {
@@ -274,7 +257,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
         }
 
         /**
-         * Update the position/characteristics of the face within the overlay.
+         * Zaktualizuj pozycję / cechy twarzy w nakładce.
          */
         @Override
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
@@ -284,9 +267,7 @@ public final class FaceTrackerMain extends AppCompatActivity {
         }
 
         /**
-         * Hide the graphic when the corresponding face was not detected.  This can happen for
-         * intermediate frames temporarily (e.g., if the face was momentarily blocked from
-         * view).
+         * Ukryj grafikę, gdy odpowiednia twarz nie została wykryta. To może się zdarzyć...
          */
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
@@ -294,8 +275,9 @@ public final class FaceTrackerMain extends AppCompatActivity {
         }
 
         /**
-         * Called when the face is assumed to be gone for good. Remove the graphic annotation from
-         * the overlay.
+
+         * URuchamia się, gdy zakłada się, że twarz zniknęła na dobre. Usuń adnotację graficzną z
+         * nakładka.
          */
         @Override
         public void onDone() {

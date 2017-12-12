@@ -1,18 +1,3 @@
-/*
- * Copyright (C) The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package application.f3cro.facetracking;
 
 import android.app.Activity;
@@ -26,8 +11,8 @@ import android.widget.TextView;
 import com.google.android.gms.vision.face.Face;
 
 /**
- * Graphic instance for rendering face position, orientation, and landmarks within an associated
- * graphic overlay view.
+ * Instancja graficzna do renderowania położenia twarzy, orientacji i punktów orientacyjnych w powiązanym obiekcie
+ * widoku nakładki graficznej
  */
 class FaceModel extends GraphicDraw.Graphic {
     private static final float FACE_POSITION_RADIUS = 10.0f;
@@ -85,8 +70,8 @@ class FaceModel extends GraphicDraw.Graphic {
 
 
     /**
-     * Updates the face instance from the detection of the most recent frame.  Invalidates the
-     * relevant portions of the overlay to trigger a redraw.
+     * Aktualizuje instancję twarzy po wykryciu najnowszej ramki. Unieważnia atrybut
+     * odpowiednie części nakładki, aby uruchomić przerysowanie.
      */
     void updateFace(Face face) {
         mFace = face;
@@ -95,7 +80,7 @@ class FaceModel extends GraphicDraw.Graphic {
 
 
     /**
-     * Draws the face annotations for position on the supplied canvas.
+     * Rysuje adnotacje twarzy dla pozycji na widoku.
      */
     @Override
     public void draw(Canvas canvas) {
@@ -104,7 +89,7 @@ class FaceModel extends GraphicDraw.Graphic {
             return;
         }
 
-        // Draws a circle at the position of the detected face, with the face's track id below.
+        // Rysuje okrąg w miejscu wykrytej twarzy, z identyfikatorem ścieżki twarzy poniżej
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
 
@@ -114,7 +99,7 @@ class FaceModel extends GraphicDraw.Graphic {
 
         String prediction = getPrediction(face.getEulerY(),face.getEulerZ());
         canvas.drawText("Kierunek odchylenia twarzy: "+prediction,x-ID_X_OFFSET,y-ID_Y_OFFSET+3*ID_TEXT_SIZE,mIdPaint);
-        // Draws a bounding box around the face.
+        // Rysuje obwiednię wokół twarzy
         float xOffset = scaleX(face.getWidth() / 2.0f);
         float yOffset = scaleY(face.getHeight() / 2.0f);
         float left = x - xOffset;
@@ -122,21 +107,6 @@ class FaceModel extends GraphicDraw.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
-
-        /*TextView textView = (TextView)((Activity)mContext).findViewById(R.id.faceUpdates);
-        String data=textView.getText().toString();
-        int len = data.length();
-        String line =face.getId()+"  "+ getUpdates();
-        if(len>60){
-            String partial_data = data.substring(len-30,len);
-            if(partial_data.contains(line)){
-                //do nothing
-            }else{
-                textView.append("\nUserId:"+line);
-            }
-        }else{
-            textView.append("\nUserId:"+line);
-        }*/
 
         final ScrollView mScrollView=(ScrollView)((Activity)mContext).findViewById(R.id.scrollView);
 
