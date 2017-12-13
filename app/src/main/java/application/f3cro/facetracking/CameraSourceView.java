@@ -40,13 +40,16 @@ public class CameraSourceView extends ViewGroup {
         addView(mSurfaceView);
     }
 
+    // Metody startujace kamere
     public void start(CameraSource cameraSource) throws IOException {
+        // Zatrzymaj jesli nie istnieje kamera
         if (cameraSource == null) {
             stop();
         }
 
         mCameraSource = cameraSource;
 
+        // Startuj jesli istnieje kamera
         if (mCameraSource != null) {
             mStartRequested = true;
             startIfReady();
@@ -58,43 +61,60 @@ public class CameraSourceView extends ViewGroup {
         start(cameraSource);
     }
 
+    // Metoda zatrzymujaca kamere
     public void stop() {
         if (mCameraSource != null) {
             mCameraSource.stop();
         }
     }
 
+    // Metoda zatrzymujaca kamere oraz uwalniajaca zasoby kamery
     public void release() {
+
+        // Jesli istnieje kamera
         if (mCameraSource != null) {
             mCameraSource.release();
             mCameraSource = null;
         }
     }
 
+    // Nie ostrzegaj o braku zezwolenia
     @SuppressLint("MissingPermission")
     private void startIfReady() throws IOException {
+
+        // Jesli wywolano z metody start oraz wczesniej poprawnie utworzono powierzchnie
         if (mStartRequested && mSurfaceAvailable) {
 
+            // Otworz kamere i zacznij wysylac klatki
             mCameraSource.start(mSurfaceView.getHolder());
 
             if (mOverlay != null) {
                 Size size = mCameraSource.getPreviewSize();
+
+                // Pobierz szerokosc i wysokosc
                 int min = Math.min(size.getWidth(), size.getHeight());
                 int max = Math.max(size.getWidth(), size.getHeight());
+
+                // Jesli jestesmy w trybie portretowym
                 if (isPortraitMode()) {
-                    // Zamień szerokość i wysokość w trybie portretowym, ponieważ zostanie on obrócony o
-                    // 90 stopni
+                    // Zamien szerokosc i wysokosc
                     mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
                 } else {
                     mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
                 }
+
+                // Wyczysc wszystkie grafiki
                 mOverlay.clear();
             }
+
             mStartRequested = false;
         }
     }
 
+    // Interfejs implementowany dla otrzymywania informacji o zmianach powierzchni
     private class SurfaceCallback implements SurfaceHolder.Callback {
+
+        // Metoda wywolywana zaraz po utworzeniu powierzchni
         @Override
         public void surfaceCreated(SurfaceHolder surface) {
             mSurfaceAvailable = true;
@@ -105,29 +125,36 @@ public class CameraSourceView extends ViewGroup {
             }
         }
 
+        // Metoda wywolywana po zniszczeniu powierzchni
         @Override
         public void surfaceDestroyed(SurfaceHolder surface) {
             mSurfaceAvailable = false;
         }
 
+        // Metoda wywolywana zaraz po zmianie formatu lub wielkosci powierzchni
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         }
     }
 
+    // Metoda wywolywana przy przydzielaniu wielkosci i pozycji
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = 320;
         int height = 240;
+
+        // Jesli istnieje kamera
         if (mCameraSource != null) {
             Size size = mCameraSource.getPreviewSize();
+
+            // I ma przypisane wymiary
             if (size != null) {
                 width = size.getWidth();
                 height = size.getHeight();
             }
         }
 
-        // Zamień szerokość i wysokość w pionie, ponieważ zostanie obrócony o 90 stopni
+        // Zamien szerokosc i wysokosc z uwagi na obrocenie o 90 stopni
         if (isPortraitMode()) {
             int tmp = width;
             width = height;
@@ -137,16 +164,17 @@ public class CameraSourceView extends ViewGroup {
         final int layoutWidth = right - left;
         final int layoutHeight = bottom - top;
 
-        // Oblicza wysokość i szerokość, aby potencjalnie dopasować szerokość.
+        // Oblicz wysokosc i szerokosc, aby potencjalnie dopasowac szerokosc.
         int childWidth = layoutWidth;
         int childHeight = (int)(((float) layoutWidth / (float) width) * height);
 
-        // Jeśli wysokość jest zbyt wysoka przy użyciu dopasowanej szerokości,to dopasowuje wysokość.
+        // Jesli wysokosc jest zbyt wysoka przy uzyciu dopasowanej szerokosci, to dopasuj wysokosc
         if (childHeight > layoutHeight) {
             childHeight = layoutHeight;
             childWidth = (int)(((float) layoutHeight / (float) height) * width);
         }
 
+        // Przydziel obliczone wartosci wysokosci i szerokosci
         for (int i = 0; i < getChildCount(); ++i) {
             getChildAt(i).layout(0, 0, childWidth, childHeight);
         }
@@ -158,8 +186,10 @@ public class CameraSourceView extends ViewGroup {
         }
     }
 
+    // Metoda sprawdzajaca, czy jestesmy w trybie portretowym
     private boolean isPortraitMode() {
         int orientation = mContext.getResources().getConfiguration().orientation;
+
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return false;
         }
